@@ -1,28 +1,32 @@
-import csv
+import pandas as pd
 
-def aggregate_data(input_files, output_file):
-   
-    aggregated_data = []
+def process_file(filename):
+    # read the TSV file into a Pandas dataframe
+    df = pd.read_csv(filename, sep='\t')
     
+    # process the data as needed
+    # ...
     
-    for input_file in input_files:
-        with open(input_file, 'r') as f:
-            reader = csv.reader(f, delimiter='\t')
-          
-            next(reader)
-            
-            for row in reader:
-                aggregated_data.append(row)
-    
-    
-    with open(output_file, 'w', newline='') as f:
-        writer = csv.writer(f, delimiter='\t')
-       
-        writer.writerow(['Id', 'username', 'email', 'hashed_password', 'plaintext_password', 'ip'])
-       
-        writer.writerows(aggregated_data)
+    return df
 
+def aggregate_data(files):
+    # initialize an empty dataframe
+    aggregated_df = pd.DataFrame(columns=['Id', 'username', 'email', 'hashed password', 'plain text password', 'ip'])
+    
+    # process each file and concatenate the result to the aggregated dataframe
+    for file in files:
+        df = process_file(file)
+        aggregated_df = pd.concat([aggregated_df, df], ignore_index=True)
+    
+    return aggregated_df
 
-input_files = ['user_email_hash.1m.tsv', 'ip_1m.tsv', 'plain_32m.tsv']
-output_file = 'output_data'
-aggregate_data(input_files, output_file)
+def main(files, output_file):
+    aggregated_df = aggregate_data(files)
+    
+    # write the aggregated data to the output file
+    aggregated_df.to_csv(output_file, sep='\t', index=False)
+
+if __name__ == '__main__':
+    files = ['user_email_hash.1m.tsv', 'ip_1m.tsv', 'plain_32m.tsv']
+    output_file = 'output2.tsv'
+    main(files, output_file)
