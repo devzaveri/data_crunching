@@ -7,4 +7,4 @@ df = pd.concat(df_list, axis=1, ignore_index=True)
 
 col_names = ['Id', 'username', 'email', 'hashed_password', 'plaintext_password', 'ip']
 
-df.to_csv("merged_file5.tsv", sep='\t', index=False, header=True)
+df.to_csv("merged_file.tsv", sep='\t', index=False, header=True)
